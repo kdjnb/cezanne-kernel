@@ -91,8 +91,8 @@ integrate_kernelsu() {
 	if [ -d "$KSU_DIR/.git" ]; then
 		n=$(git -C "$KSU_DIR" rev-list --count HEAD 2>/dev/null || true)
 		if [ -n "$n" ]; then
-			v=$((10000 + n + 200))
-			sed -i "s/-DKSU_VERSION=16/-DKSU_VERSION=$v/" "$KERNEL_DIR/drivers/kernelsu/Makefile"
+			v=$((30000 + n))
+			printf '\nccflags-y += -DKSU_VERSION=%s\n' "$v" >> "$KERNEL_DIR/drivers/kernelsu/Kbuild"
 			log "KernelSU 版本号固定为 $v"
 		fi
 	fi
