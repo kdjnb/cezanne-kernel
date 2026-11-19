@@ -1,25 +1,20 @@
 # ============================================================
-# KernelSU 配置片段 —— cezanne 4.14.186（非 GKI，走 legacy 模式）
-#
-# 仅在 workflow 里勾选 enable_ksu=true 时才会被应用。
-#
-# 原理：4.14 没有 GKI，KernelSU 用 kprobe hook 接管 syscall，
-#       因此开 KPROBES。KALLSYMS_ALL 原厂为 n，开它会改
-#       module_layout 的 CRC → 原厂 vendor .ko 加载失败，
-#       所以这里不开它：4.14 上 kallsyms_lookup_name 已导出，
-#       KSU 要 hook 的都是函数符号（函数符号无论 KALLSYMS_ALL 都在表里）。
+# SukiSU-Nova（builtin，自带 SUSFS）配置片段 —— cezanne 4.14.186 非 GKI
+# 仅在 enable_ksu=true 时应用。
+# SukiSU 非 GKI 要求 KALLSYMS_ALL=y（会改 module_layout CRC，vendor .ko
+# 靠 relax_modversions 强行加载；守卫已把 KALLSYMS_ALL 移出关键项）。
 # ============================================================
 
 CONFIG_KSU=y
+CONFIG_KSU_SUSFS=y
 CONFIG_KPROBES=y
 CONFIG_KALLSYMS=y
-# CONFIG_KALLSYMS_ALL is not set
+CONFIG_KALLSYMS_ALL=y
 
-# --- 一些管理器/模块依赖的能力 ---
+CONFIG_EXT4_FS=y
 CONFIG_MODULES=y
 CONFIG_MODULE_UNLOAD=y
 CONFIG_OVERLAY_FS=y
 CONFIG_TMPFS_XATTR=y
 
-# --- 关闭调试信息，显著缩短云端编译时间 ---
 # CONFIG_DEBUG_INFO is not set
