@@ -81,6 +81,8 @@ integrate_kernelsu() {
 	log "集成 KernelSU 到 drivers/kernelsu"
 	rm -rf "$KERNEL_DIR/drivers/kernelsu"
 	cp -a "$KSU_DIR/kernel" "$KERNEL_DIR/drivers/kernelsu"
+	# 4.14 无 linux/static_call.h（5.10+），SukiSU 这条 include 漏了版本守卫，补上
+	sed -i 's|^#include <linux/static_call.h>|#if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 10, 0)\n#include <linux/static_call.h>\n#endif|' "$KERNEL_DIR/drivers/kernelsu/kernel_includes.h" || true
 
 	grep -q 'kernelsu/' "$KERNEL_DIR/drivers/Makefile" || \
 		printf '\nobj-$(CONFIG_KSU) += kernelsu/\n' >> "$KERNEL_DIR/drivers/Makefile"
