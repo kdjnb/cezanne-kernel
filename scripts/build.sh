@@ -91,8 +91,8 @@ integrate_kernelsu() {
 	if [ -d "$KSU_DIR/.git" ]; then
 		n=$(git -C "$KSU_DIR" rev-list --count HEAD 2>/dev/null || true)
 		if [ -n "$n" ]; then
-			v=$((30000 + n))
-			printf '\nccflags-y += -DKSU_VERSION=%s\n' "$v" >> "$KERNEL_DIR/drivers/kernelsu/Kbuild"
+			v=$((30000 + n - 4001))
+			printf '\nccflags-y += -DKSU_VERSION=%s\n' "$v" >> "$KERNEL_DIR/drivers/kernelsu/Makefile"
 			log "KernelSU 版本号固定为 $v"
 		fi
 	fi
@@ -193,7 +193,7 @@ verify_config() {
 # 注意：LTO / LTO_CLANG / CFI / CFI_CLANG 必须与原厂一致地保持开启。
 # 实测原厂 10 个 vendor .ko 全部带 .rela.text.__cfi_check 段并引用
 # __cfi_slowpath（CRC 0x5356009c），关掉 CFI 会让 .ko 因缺符号直接加载失败。
-CRITICAL_SYMS="SMP PREEMPT MODULE_UNLOAD MODVERSIONS KALLSYMS KALLSYMS_ALL \
+CRITICAL_SYMS="SMP PREEMPT MODULE_UNLOAD MODVERSIONS KALLSYMS \
 TRACEPOINTS EVENT_TRACING FTRACE FUNCTION_TRACER JUMP_LABEL LIVEPATCH \
 MODULE_SIG MODULE_SIG_FORCE GCC_PLUGIN_RANDSTRUCT LTO LTO_CLANG CFI CFI_CLANG \
 MODULE_UNLOAD_TAINT_TRACKING MODULE_FORCE_UNLOAD PREEMPT_COUNT STACKPROTECTOR_STRONG"
