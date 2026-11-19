@@ -1,16 +1,15 @@
 # ============================================================
 # SukiSU-Nova（builtin）配置片段 —— cezanne 4.14.186 非 GKI
 # 仅在 enable_ksu=true 时应用。
+# 注意：build.sh 的片段解析器只认 CONFIG_X=y/n，# 开头的行被当注释跳过，
+#       所以关符号必须写成 CONFIG_X=n，不能写 '# CONFIG_X is not set'。
 # SukiSU 非 GKI 要求 KALLSYMS_ALL=y（会改 module_layout CRC，vendor .ko
 # 靠 relax_modversions 强行加载；守卫已把 KALLSYMS_ALL 移出关键项）。
-#
-# SUSFS 暂关：builtin 自带 SUSFS 代码，但 include/linux/susfs.h、fs/susfs.c
-# 及把钩子插入 fs/*.c 的 50_add_susfs 补丁需从 susfs4ksu kernel-4.14 分支单独加，
-# 4.14 上能否干净打上未定。先出能用的 SukiSU，SUSFS 作后续。
+# SUSFS 暂关：内核侧 susfs 文件/补丁待加，先出能用的 SukiSU。
 # ============================================================
 
 CONFIG_KSU=y
-# CONFIG_KSU_SUSFS is not set
+CONFIG_KSU_SUSFS=n
 CONFIG_KPROBES=y
 CONFIG_KALLSYMS=y
 CONFIG_KALLSYMS_ALL=y
@@ -20,5 +19,3 @@ CONFIG_MODULES=y
 CONFIG_MODULE_UNLOAD=y
 CONFIG_OVERLAY_FS=y
 CONFIG_TMPFS_XATTR=y
-
-# CONFIG_DEBUG_INFO is not set
