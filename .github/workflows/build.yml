@@ -102,12 +102,12 @@ jobs:
         if: env.ENABLE_EROFS == '1'
         run: sh scripts/fetch_erofs.sh
 
-      - name: 克隆 SukiSU-Nova（builtin，自带 SUSFS，非 GKI）
+      - name: 克隆 SukiSU-Nova（builtin-new，非 GKI，syscall_table_hook）
         if: env.ENABLE_KSU == '1'
         run: |
           set -e
           git clone --filter=blob:none https://github.com/SukiSU-Nova/SukiSU-Nova.git KernelSU
-          git -C KernelSU checkout builtin
+          git -C KernelSU checkout builtin-new
           echo "commit count: $(git -C KernelSU rev-list --count HEAD)"
 
       - name: 预检 fs/erofs 编译（失败即止，省时间）
