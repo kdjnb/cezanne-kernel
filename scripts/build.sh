@@ -94,7 +94,7 @@ integrate_kernelsu() {
 		n=$(git -C "$KSU_DIR" rev-list --count HEAD 2>/dev/null || true)
 		if [ -n "$n" ]; then
 			v=$((30000 + n - 4001))
-			printf '\nccflags-y += -DKSU_VERSION=%s\n' "$v" >> "$KERNEL_DIR/drivers/kernelsu/Makefile"
+			printf '\nCFLAGS_ksu.o += -DKSU_VERSION=%s\n' "$v" >> "$KERNEL_DIR/drivers/kernelsu/Makefile"
 			log "KernelSU 版本号固定为 $v"
 		fi
 	fi
@@ -165,7 +165,8 @@ verify_config() {
 	fi
 	if [ "$ENABLE_KSU" = "1" ]; then
 		check_y KSU
-		check_y KPROBES
+		check_y KSU_TAMPER_SYSCALL_TABLE
+		check_y KSU_LSM_SECURITY_HOOKS
 	fi
 	check_y MODVERSIONS
 	check_not_set LOCALVERSION_AUTO
